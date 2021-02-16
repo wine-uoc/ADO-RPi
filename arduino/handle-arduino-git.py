@@ -30,3 +30,7 @@ except Exception as e:
 			logging.info("nothing to compile/upload")
 		else:
 			logging.info("proceeding to updating Arduino firmware")
+			subprocess.call("/opt/ADO-RPi/arduino/flash-arduino")
+			logging.info("END compile/upload")
+
+
