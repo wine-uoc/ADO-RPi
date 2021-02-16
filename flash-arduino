@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#we should add git pull to have the latest version of the code
+echo "HELLO!"
+arduino-cli compile --fqbn arduino:samd:mkr1000 MyFirstSketch
+
