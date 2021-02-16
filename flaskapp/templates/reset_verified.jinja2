@@ -1,0 +1,51 @@
+{% extends "layout.jinja2" %}
+
+{% block pagestyles %}
+    <link href="{{ url_for('static', filename='dist/css/account.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+    <div class="formwrapper">
+        <h1> Enter your new password </h1>
+        
+        <form method="POST">
+            {{ form.csrf_token() }}
+
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <fieldset class="password">
+                {{ form.password.label }}
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <ul class="errors">
+                        {% for error in form.password.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </fieldset>
+
+            <fieldset class="confirm">
+                {{ form.confirm.label }}
+                {{ form.confirm }}
+                {% if form.confirm.errors %}
+                    <ul class="errors">
+                        {% for error in form.confirm.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </fieldset>
+
+            <div class="submitbutton">
+                <input id="submit" type="submit" value="Set New Password">
+            </div>
+
+            <div class="loginsignup">
+                <span><a href="{{ url_for('auth_bp.login') }}">Back to Login.</a></span>
+            </div>
+        </form>
+    </div>
+{% endblock %}

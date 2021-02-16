@@ -1,0 +1,138 @@
+{% extends "layout.jinja2" %}
+
+{% block pagestyles %}
+    <link href="{{ url_for('static', filename='dist/css/dashboard.css') }}" rel="stylesheet" type="text/css">
+    {#    <link rel="stylesheet" href="https://use.typekit.net/sus7rlu.css">#}
+{% endblock %}
+
+{% block content %}
+
+    {% if current_user.is_authenticated %}
+
+        <h1 style="margin-top: 80px">Node Configuration</h1>
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+        {% endfor %}
+        
+        <p style="border-bottom: 1px solid lightblue; margin-bottom: 1px">This node is linked to: {{ current_user.email }}</p>
+
+        <div class="row" style="margin-top: 30px; margin-bottom: 30px">
+            <div class="column">
+                <p style="font-size: 1rem">Node name: {{ node_id }}</p>
+                <img src="{{ url_for('static', filename='dist/img/node.png') }}">
+            </div>
+            <div class="column">
+                <p style="font-size: 1rem">Check active sensors:</p>
+
+{#                https://github.com/BaseMax/CustomWebCheckbox#}
+                <label class="checkbox_container" style="text-align: start">
+                    Temperature-S
+                    <input type="checkbox" name="boxs01" id="s01" onclick="sendEvent('s01')" {{ s01_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+                
+                <label class="checkbox_container" style="text-align: start">
+                    Temperature-D
+                    <input type="checkbox" name="boxs11" id="s11" onclick="sendEvent('s11')" {{ s11_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+                
+                <label class="checkbox_container">
+                    Humidity
+                    <input type="checkbox" name="boxs02" id="s02" onclick="sendEvent('s02')" {{ s02_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+
+                <label class="checkbox_container">
+                    pH
+                    <input type="checkbox" name="boxs03" id="s03" onclick="sendEvent('s03')" {{ s03_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+
+                <label class="checkbox_container">
+                    Turbidity
+                    <input type="checkbox" name="boxs04" id="s04" onclick="sendEvent('s04')" {{ s04_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+
+                <label class="checkbox_container">
+                    Conductivity 1-15 ms/cm
+                    <input type="checkbox" name="boxs05" id="s05" onclick="sendEvent('s05')" {{ s05_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+
+                <label class="checkbox_container">
+                    Conductivity 10-100 ms/cm
+                    <input type="checkbox" name="boxs06" id="s06" onclick="sendEvent('s06')" {{ s06_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+
+                <label class="checkbox_container">
+                    Atmospheric Temp
+                    <input type="checkbox" name="boxs07" id="s07" onclick="sendEvent('s07')" {{ s07_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+
+                <label class="checkbox_container">
+                    Oxygen
+                    <input type="checkbox" name="boxs08" id="s08" onclick="sendEvent('s08')" {{ s08_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+
+                <label class="checkbox_container">
+                    Water Level
+                    <input type="checkbox" name="boxs09" id="s09" onclick="sendEvent('s09')" {{ s09_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>
+                <br>
+
+                <label class="checkbox_container">
+                    Air CO2
+                    <input type="checkbox" name="boxs10" id="s10" onclick="sendEvent('s10')" {{ s10_state }}>
+                    <span class="checkbox_mark"></span>
+                </label>  </div>
+            
+                
+        </div>
+
+        <p style="border-bottom: 1px solid lightblue;"></p>
+
+        <a href="{{ url_for('main_bp.set_wifi') }}" style="margin-top: auto">Configure WiFi</a>
+        {#        <p style="opacity: .6; display: inline-block"> - </p>#}
+        <a style="margin-top: auto">-</a>
+        <a href="{{ url_for('main_bp.dashboard_upgrade') }}" style="margin-top: auto">Upgrade Dashboard</a>
+        <a style="margin-top: auto">-</a>
+        <a href="{{ url_for('main_bp.dashboard') }}" style="margin-top: auto">Refresh Page</a>
+        <a style="margin-top: auto">-</a>
+        <a href="{{ url_for('main_bp.delete') }}" style="margin-top: auto">Factory Reset</a>
+        <a style="margin-top: auto">-</a>
+        <a href="{{ url_for('main_bp.logout') }}" style="margin-top: auto; margin-bottom: 20px">Log out</a>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block additionalscripts %}
+    <script>
+        function sendEvent(boxid) {
+            var checkbox = document.getElementById(boxid);
+            if (checkbox.checked == true) {
+                $.post( "/setsensor", {box_state: checkbox.checked, sensor_num: boxid});
+            } else {
+                $.post( "/setsensor", {box_state: checkbox.checked, sensor_num: boxid});
+            }
+        }
+    </script>
+{% endblock %}

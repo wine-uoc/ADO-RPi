@@ -1,0 +1,16 @@
+{% extends "layout.jinja2" %}
+
+{% block pagestyles %}
+    <link href="{{ url_for('static', filename='dist/css/account.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+    <div class="formwrapper">
+        <h1> Hi {{ name }}, </h1>
+        <h2> To reset your  ADO-node password, please click the following link within 1 hour. </h2>
+        <a href="{{ url_for('auth_bp.pass_reset_code', token=token, _external=True) }}" style="content:attr(href);"> Reset Password</a>
+        <h2> Not working? Try copying and pasting it into your browser.</h2>
+        
+    </div>
+{% endblock %}

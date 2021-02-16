@@ -1,0 +1,81 @@
+{% extends "layout.jinja2" %}
+
+{% block pagestyles %}
+    <link href="{{ url_for('static', filename='dist/css/account.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="formwrapper">
+        <form method="POST">
+            {{ form.csrf_token() }}
+
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <p style="text-align: right; border-bottom: none; margin-bottom: 1px; padding-bottom: 0px">
+                Current stored network:
+            </p>
+            <h1 style="text-align: right; border-bottom: none; font-size: 1.8rem">
+                {{ current_ssid }}
+            </h1>
+
+            <div class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="myFunction()" {{ current_wifi_state }}>
+                <label class="onoffswitch-label" for="myonoffswitch">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+            <br>
+            <p></p>
+            <br>
+
+            <fieldset class="ssid">
+                {{ form.ssid.label }}
+                {{ form.ssid(placeholder='Name of the Network') }}
+                {% if form.ssid.errors %}
+                    <ul class="errors">
+                        {% for error in form.ssid.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </fieldset>
+
+            <fieldset class="password">
+                {{ form.password.label }}
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <ul class="errors">
+                        {% for error in form.password.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </fieldset>
+
+            <div class="submitbutton">
+                <input id="submit" type="submit" value="Update Network">
+            </div>
+
+            <div class="loginsignup">
+                <span>Bring me back to <a href="{{ url_for('main_bp.dashboard') }}">configuration page.</a></span>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block additionalscripts %}
+    <script>
+        function myFunction() {
+            var checkbox = document.getElementById('myonoffswitch');
+            if (checkbox.checked == true) {
+                $.post( "/activatewifi", {javascript_data: checkbox.checked});
+                alert("This configures the Node to connect to the Internet through the stored WiFi network, rather than Ethernet.");
+            } else {
+                $.post( "/activatewifi", {javascript_data: checkbox.checked});
+            }
+        }
+    </script>
+{% endblock %}

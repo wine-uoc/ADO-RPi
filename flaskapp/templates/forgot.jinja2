@@ -1,0 +1,42 @@
+{% extends "layout.jinja2" %}
+
+{% block pagestyles %}
+    <link href="{{ url_for('static', filename='dist/css/account.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+    <div class="formwrapper">
+        <h1> Reset password </h1>
+        <p> Enter your information to obtain a password reset link</p>
+        
+        <form method="POST">
+            {{ form.csrf_token() }}
+
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <fieldset class="email">
+                {{ form.email.label }}
+                {{ form.email(placeholder='youremail@example.com') }}
+                {% if form.email.errors %}
+                    <ul class="errors">
+                        {% for error in form.email.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </fieldset>
+
+            <div class="submitbutton">
+                <input id="submit" type="submit" value="Send Reset Email">
+            </div>
+
+            <div class="loginsignup">
+                <span><a href="{{ url_for('auth_bp.login') }}">Back to Login.</a></span>
+            </div>
+        </form>
+    </div>
+{% endblock %}
