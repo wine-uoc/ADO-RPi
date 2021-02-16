@@ -19,9 +19,9 @@ class ConfigFlaskApp:
     # ENV Config
     FLASK_ENV = 'development'    #'production'    # development (to compile new CSS and JS)
     HTTPS_ENABLED = True #set to False it may not work when  mainflux is on HTTPS only
-    SSL_SERVER_URL = 'https://localhost'     # 'https://54.171.128.181'
+    SSL_SERVER_URL = 'https://35.180.121.29' #'https://localhost'     # 'https://54.171.128.181'
     SSL_CA_LOCATION = 'flaskapp/ssl/certs/ca.crt' 
-    SERVER_URL = 'http://localhost'     # 'https://54.171.128.181'
+    SERVER_URL = 'http://35.180.121.29' #'http://localhost'     # 'https://54.171.128.181'
 
     # DB Config
     SQLALCHEMY_DATABASE_URI = 'sqlite:///database/db.sqlite'
@@ -48,7 +48,7 @@ class ConfigRPI:
     Set RPI configuration vars.
     """
     # Backend server Mainflux
-    SHORT_SERVER_URL = 'localhost' #for mqtt broker
+    SHORT_SERVER_URL = '35.180.121.29' #'localhost' #for mqtt broker
     SERVER_PORT_MQTT = 1883 #unencrypted traffic
 
     #TLS over HTTP, for mqtt broker
@@ -66,8 +66,8 @@ class ConfigRPI:
     # Arduino
     # Mapping sensor type <-> sensor position in db
     SENSOR_TYPES = ['onewire', 'i2c', 'analog', 'analog', 'analog', 'analog', 'i2c', 'analog', 'digital', 'analog', 'onewire']
-    SENSOR_PINS = ['0', '11,12', '0', '1', '3', '4', '11,12', '2', '3', '5', '5']
-    SENSOR_PARAMS = [[0], ['0x40', 'H'], [0], [1], [3], [4], ['0x40', 'T'], [2], [1], [5, 'CO2'], [5]]
+    SENSOR_PINS = ['0', '11,12', '0', '2', '3', '4', '11,12', '1', '3', '5', '5']
+    SENSOR_PARAMS = [[0], ['0x40', 'H'], [0], [2], [3], [4], ['0x40', 'T'], [1], [1], [5, 'CO2'], [5]]
     SENSOR_MAGNITUDES = ['Temperature-S', 'Humidity', 'pH', 'Turbidity', 'Conductivity1', 'Conductivity2', 'AtmosphericTemp',
                          'Oxygen', 'WaterLevel', 'AirCO2', 'Temperature-D']
     SENSOR_UNITS = ['Cel', '%', 'pH', 'NTU', 'ms/cm', 'mS/cm', 'Cel', 'mg/L', '', 'ppm', 'Cel']

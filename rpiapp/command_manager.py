@@ -11,6 +11,7 @@ from rpiapp.db_management import check_table_database, get_table_database, updat
 from rpiapp.periodic_control_sensors import set_sr
 from rpiapp.logging_filter import logger
 from config import ConfigRPI, ConfigFlaskApp
+import ssl
 
 logging = logger
 CmdType = arduino_commands.CmdType
@@ -261,14 +262,14 @@ def reestablish_serial(serial_port):
      #   logging.error("cannot close port: %s", str(e))
 
     try:    
-        ser = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout = READ_timeout, write_timeout = WRITE_timeout, rtscts =False, dsrdtr= False)
+        ser = serial.Serial(port='/dev/serial0', baudrate=9600, timeout = READ_timeout, write_timeout = WRITE_timeout, rtscts =False, dsrdtr= False)
         flag = 1
-        logging.warning("connected to ACM0")
+        logging.warning("connected to serial0")
     except:
         try:
-            ser = serial.Serial(port='/dev/ttyACM1', baudrate=9600, timeout = READ_timeout, write_timeout = WRITE_timeout, rtscts =False, dsrdtr= False)
+            ser = serial.Serial(port='/dev/serial0', baudrate=9600, timeout = READ_timeout, write_timeout = WRITE_timeout, rtscts =False, dsrdtr= False)
             flag = 1
-            logging.warning("connected to ACM1")
+            logging.warning("connected to serial0")
         except:
             ser = None
             logging.warning("connected to nothing")
@@ -316,8 +317,10 @@ def mqtt_connection_0(tokens, engine, serial):
     subtopic_sr = mqtt_topic + '/control/SR/' + str(tokens.thing_id) #SR command is now specific to this device
     if ConfigRPI.HTTPS_ENABLED:
         print ("Connecting via TLS")
-        client.tls_set(ssl_CA)
-        client.connect_async(host=ConfigRPI.SHORT_SERVER_URL, port=ConfigRPI.SSL_SERVER_PORT_MQTT, keepalive=60)
+        flag = client.tls_set(ssl_CA)
+        client.enable_logger(logger=None)
+        result=client.connect(host=ConfigRPI.SHORT_SERVER_URL, port=ConfigRPI.SSL_SERVER_PORT_MQTT, keepalive=60)
+        #print(result)
     else:
         print ("unencrypted connection")
         client.connect_async(host=ConfigRPI.SHORT_SERVER_URL, port=ConfigRPI.SERVER_PORT_MQTT, keepalive=60)
@@ -351,6 +354,9 @@ def on_connect(client, userdata, flags, rc):
         logging.info(subtopic_sr)
         client.subscribe(subtopic_sr)
         client.subscribe(subtopic_cal)
+    else:
+        print("MQTT rc = ", rc)
+
 
 
 def on_disconnect(client, userdata, rc):
@@ -358,8 +364,8 @@ def on_disconnect(client, userdata, rc):
         logging.warning("Unexpected disconnection.")
 
 def on_log(client, userdata, level, buf):
-    if level == MQTT_LOG_WARNING or level == MQTT_LOG_ERR:
-        logging.warning(buf)
+    #if level == MQTT_LOG_WARNING or level == MQTT_LOG_ERR:
+    logging.warning(buf)
 
 
 def on_subscribe(client, userdata, mid, granted_qos):
@@ -378,8 +384,13 @@ def on_message_0(client, userdata, msg):
     rx_data = str(msg.payload.decode('UTF-8'))  # message is string now, not json
     message = json.loads(rx_data) #message to json
     logging.info ("***************************************")
-    logging.info ("******** %s", str(message['type']))
-    if str(message['type']) == 'SET_SR':
+    try:
+        m_type= str(message['type'])
+        logging.info ("******** %s", str(message['type']))
+    except TypeError as e:
+        logging.error("Error, message does not contain TYPE:%s", str(e))
+        m_type = 'None'
+    if m_type == 'SET_SR':
         logging.info("Set Sr message")
         # message = eval(message)  # transform to dictionary
         magnitude = message['sensor']
@@ -413,7 +424,7 @@ def on_message_0(client, userdata, msg):
         else:
             logging.warning("threads stay the same")
 
-    elif str(message['type']) == 'CAL':
+    elif m_type == 'CAL':
         logging.info("**** CAL the %s sensor", str(message['sensor']))
         sensor = str(message['sensor'])
         db_to_use = str(message['v']) #indicates in which calibration db to save the data
@@ -465,7 +476,7 @@ def main():
         time.sleep(2)
 
     #initialize serial
-    ser = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout =READ_timeout, write_timeout = WRITE_timeout, rtscts =False, dsrdtr= False)
+    ser = serial.Serial(port='/dev/serial0', baudrate=9600, timeout =READ_timeout, write_timeout = WRITE_timeout, rtscts =False, dsrdtr= False)
 
     # Connect to backend and subscribe to rx control topic
     global MQTT_CONNECTED 

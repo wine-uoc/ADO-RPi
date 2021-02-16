@@ -174,15 +174,18 @@ def publish_data(magnitude,response, client, topic, engine):
         #***********************************************
         elif name == 'AirCO2':
             voltage = value/1024*3300 #mV
+            #logging.debug("value: %s", value)
+            #logging.debug("voltage: %s", voltage)
             #print("voltage:", voltage)
             try:
                 value = readCO2(voltage)
+                #logging.debug("ppm: %s", value)
             except:
                 logging.error("some CO2 error")
         
         payload = [{"bn": "", "n": name, "u": unit, "v": value, "t": timestamp}]
         #payload = {"bn": "", "n": name, "u": unit, "v": 10, "t": timestamp}
-        #print(payload)
+        print(payload)
         client.publish(topic, json.dumps(payload))
 
 
@@ -200,10 +203,11 @@ def readTurbidity(reading):
     #from dfrobot wiki page
     #transform reading 0-1023 to voltage 0-5V
     #reading is 0-3.3V but extrapolate to 5V for using this formula
-    voltage = reading * 5/1024 # converts reading to 5V value
-    #voltage3.3 = reading * 3.3/1024 #maximum pin input is 3.3V
-    #voltage5 = voltage3.3 * 5/3.3
+    voltage = reading * 3.3/1024 # converts reading to voltage value
+    voltage = voltage / 0.72 # accounts for the voltage divider to have the real sensor output value
+    #print("***************************transformed voltage",voltage)
     NTU = -1120.4*(voltage**2) + 5742.3*voltage -4352.9
+    #print("computed NTU******************", NTU)
     return NTU 
 
 def readEC(voltage,temperature, _kvalueLow, _kvalueHigh):
@@ -335,7 +339,7 @@ def HandleCalibration(engine, db, value, sensor_index, topic_cal, client):
             db_index = 1
             _ecvalueRaw = 1000*voltage/RES2/ECREF*_kvalue2*10.0
             logging.debug ("ecvalueRaw %s",_ecvalueRaw)
-            if (_ecvalueRaw>6) and (_ecvalueRaw<18): #original 18
+            if (_ecvalueRaw>6) and (_ecvalueRaw<19): #original 18
                 logging.debug("identified 12.88ms/cm buffer solution")
                 rawECsolution = 12.9*(1.0+0.0185*(temperature-25.0))  #temperature compensation
                 KValueTemp = RES2*ECREF*rawECsolution/1000.0/voltage/10.0  #calibrate the k value

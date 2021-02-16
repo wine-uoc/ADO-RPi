@@ -218,7 +218,7 @@ def sign_up_database(name, email, password, device_name):
         user.set_password(password, hash_it=app.config['HASH_USER_PASSWORD'])
 
         node_config = NodeConfig(id=email)              # nodeconfig table associated to email
-        node_config.set_values([0] * app.config['MAX_NUM_SENSORS_IN_NODE'])   # All sampling rates to 0 (disabled)
+        node_config.set_values([30] * app.config['MAX_NUM_SENSORS_IN_NODE'])   # All sampling rates to 30 (enabled, so they can show up in grafana)
 
         wifi = Wifi(id=email, ssid='')                  # wifidata table associated to email
         wifi.set_password(password, hash_it=False)      # Store-hashed option off
@@ -227,16 +227,18 @@ def sign_up_database(name, email, password, device_name):
         tokens = Tokens(id=email, node_id=device_name) #tokens = Tokens(id=email, node_id=create_node_name())   # tokens table associated to email
 
         calibration1 = Calibration_1(id=email)              # calibration table associated to email
-        calibration1.set_values([1] * app.config['MAX_NUM_SENSORS_IN_NODE'])   # All 1-pt calibration values set to 1 (default)
+        # All 1-pt calibration values set to a default approx calibration, so that the displayed values in grafana make sense
+        calibration1.set_values([1.0, 1.0, 1253.61328125, 1.0, 1.26066535744646, 0.66023375132045, 1.0, 892.67578125, 1.0, 0.0, 1.0]) 
         
         calibration2 = Calibration_2(id=email)              # calibration table associated to email
-        calibration2.set_values([1] * app.config['MAX_NUM_SENSORS_IN_NODE'])   # All 2-pt calibration values set to 1 (default)
+        # All 2-pt calibration values set to a default approx calibration, so that the displayed values in grafana make sense
+        calibration2.set_values([1.0, 1.0, 348.046875, 1.0, 1.32640293883662, 1.0, 1.0, 754.1015625, 1.0, 1.0, 1.0])   
 
         calibration1_temp = Calibration_1_Temp(id=email)              # calibration table associated to email
-        calibration1_temp.set_values([25] * app.config['MAX_NUM_SENSORS_IN_NODE'])   # All 1-pt calibration values set to 25deg (default)
+        calibration1_temp.set_values([25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 22.19, 25.0, 25.0, 25.0])   # default calibration values
         
         calibration2_temp = Calibration_2_Temp(id=email)              # calibration table associated to email
-        calibration2_temp.set_values([25] * app.config['MAX_NUM_SENSORS_IN_NODE'])   # All 2-pt calibration values set to 25deg (default)
+        calibration2_temp.set_values([25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 12.13, 25.0, 25.0, 25.0])   # default calibration values
         
         #loads flags from config file
         #flag = 1 for the sensors that require calibration before using
