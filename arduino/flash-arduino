@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 #we should add git pull to have the latest version of the code
 echo "HELLO!"
-arduino-cli compile --fqbn arduino:samd:mkr1000 MyFirstSketch
-
+arduino-cli compile --fqbn arduino:samd:mkrwan1300 /opt/Arduino/ADO-Arduino/src
+if [ $? -eq 0 ]; then
+    echo COMPILE OK 
+else
+    echo COMPILE FAILED
+fi
+arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:samd:mkrwan1300 /opt/Arduino/ADO-Arduino/src/src
+if [ $? -eq 0 ]; then
+    echo UPLOAD OK
+else
+    echo UPLOAD FAILED
+fi
