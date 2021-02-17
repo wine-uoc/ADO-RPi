@@ -11,6 +11,7 @@ from flaskapp.backend.grafana_bootstrap import load_json
 from flaskapp.backend.mainflux_provisioning import delete_thing
 from config import ConfigFlaskApp
 import requests
+import subprocess
 if app.config['HTTPS_ENABLED']:
     host = ConfigFlaskApp.SSL_SERVER_URL
     ssl_flag = ConfigFlaskApp.SSL_CA_LOCATION 
@@ -104,6 +105,7 @@ def delete():
     if response.ok:
       delete_tables_entries()
       logout_user()
+      subprocess.call("/opt/Raspberry/ADO-RPi/flaskapp/restart-rpiapp")
     else:
       flash("Error when trying to factory reset. Please try again after loging in.")
     return redirect(url_for('main_bp.dashboard'))
