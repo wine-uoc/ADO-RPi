@@ -6,7 +6,7 @@ if [ $? -eq 0 ]; then
 else
     echo REQUIREMENTS INSTALL FAILED
 fi
-sudo cp /opt/Raspberry/ADO-RPi/config/ado.conf /etc/supervisor/conf.d/adonew.conf
+sudo cp /opt/Raspberry/ADO-RPi/config/ado.conf /etc/supervisor/conf.d/ado.conf
 if [ $? -eq 0 ]; then
     echo CONFIGURATION COPY OK
 else
