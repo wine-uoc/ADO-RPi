@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+echo "HELLO!"
+pip3 install -r /opt/Raspberry/ADO-RPi/requirements.txt
+if [ $? -eq 0 ]; then
+    echo REQUIREMENTS INSTALL OK
+else
+    echo REQUIREMENTS INSTALL FAILED
+fi
+sudo cp /opt/Raspberry/ADO-RPi/config/ado.conf /etc/supervisor/conf.d/adonew.conf
+if [ $? -eq 0 ]; then
+    echo CONFIGURATION COPY OK
+else
+    echo CONFIGURATION COPY FAILED
+fi
+
+sudo service supervisor stop
+if [ $? -eq 0 ]; then
+    echo SUPERVISOR STOP OK
+else
+    echo SUPERVISOR STOP FAILED
+fi
+
+sudo service supervisor start
+if [ $? -eq 0 ]; then
+    echo SUPERVISOR START OK
+else
+    echo SUPERVISOR START FAILED
+fi
+
+
