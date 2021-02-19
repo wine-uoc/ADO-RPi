@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#we should add git pull to have the latest version of the code
+PS4='+ $BASH_SOURCE:$LINENO:' bash -xlic ''
+echo "HELLO!"
+sudo raspi-config --expand-rootfs
+if [ $? -eq 0 ]; then
+    echo EXPAND ROOTFS  OK 
+else
+    echo EXPAND ROOTFS FAILED
+fi
+sudo reboot
+if [ $? -eq 0 ]; then
+    echo REBOOTING OK
+else
+    echo REBOOTING FAILED
+fi

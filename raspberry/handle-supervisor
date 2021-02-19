@@ -13,18 +13,11 @@ else
     echo CONFIGURATION COPY FAILED
 fi
 
-sudo service supervisor stop
+sudo service supervisor restart
 if [ $? -eq 0 ]; then
-    echo SUPERVISOR STOP OK
+    echo SUPERVISOR RESTART OK
 else
-    echo SUPERVISOR STOP FAILED
-fi
-
-sudo service supervisor start
-if [ $? -eq 0 ]; then
-    echo SUPERVISOR START OK
-else
-    echo SUPERVISOR START FAILED
+    echo SUPERVISOR RESTART FAILED
 fi
 
 

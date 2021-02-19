@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 #we should add git pull to have the latest version of the code
+PS4='+ $BASH_SOURCE:$LINENO:' bash -xlic ''
 echo "HELLO!"
-arduino-cli compile --fqbn arduino:samd:mkrwan1300 /opt/Arduino/ADO-Arduino/src
+/usr/local/arduino-cli/arduino-cli compile --fqbn arduino:samd:mkrwan1300 /opt/Arduino/ADO-Arduino/src
 if [ $? -eq 0 ]; then
     echo COMPILE OK 
 else
     echo COMPILE FAILED
 fi
-arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:samd:mkrwan1300 /opt/Arduino/ADO-Arduino/src/src
+/usr/local/arduino-cli/arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:samd:mkrwan1300 /opt/Arduino/ADO-Arduino/src/src
 if [ $? -eq 0 ]; then
     echo UPLOAD OK
 else
