@@ -57,8 +57,8 @@ def signup():
                                               signup_form.password.data,
                                               node_id)
             if not error_msg:
-                # Registration OK, app log in and proceed
-                return redirect(url_for('main_bp.dashboard'))
+                # Registration OK, app log in and proceed to setting wifi
+                return redirect(url_for('main_bp.set_wifi'))
             logout_user()
             delete_tables_entries()
 

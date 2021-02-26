@@ -185,6 +185,22 @@ def get_messages_on_channel(channel_id, thing_key):
     response = requests.get(url, headers=headers, verify=ssl_flag)
     print(response.text)
 
+def raspberrypi_rename(node_name):
+    hosts = open("/etc/hosts", 'r')
+    list_of_lines = hosts.readlines()
+    list_of_lines[5] = "127.0.1.1	"+str(node_name)
+
+    hosts= open("/etc/hosts", 'w')
+    hosts.writelines(list_of_lines)
+    hosts.close()
+
+    hostname = open("/etc/hostname", 'r')
+    list_of_lines = hostname.readlines()
+    list_of_lines[0] = str(node_name)
+
+    hostname= open("/etc/hostname", 'w')
+    hostname.writelines(list_of_lines)
+    hostname.close()
 
 def register_node_backend(name, email, password, node_id):
     global host, ssl_flag
@@ -244,7 +260,8 @@ def register_node_backend(name, email, password, node_id):
             update_tokens_values(token, thing_id, thing_key, channel_id)
             # boostrap grafana again, just for development
             grafana_status=grafana.bootstrap(name, organization, email, password, channel_id)
-
+            #modify device name to name.local
+            raspberrypi_rename(node_name)
         else:
             error_msg = 'Device name already exists for this account. Please choose a different name.'
 
