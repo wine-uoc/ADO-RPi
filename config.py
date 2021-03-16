@@ -19,9 +19,9 @@ class ConfigFlaskApp:
     # ENV Config
     FLASK_ENV = 'development'    #'production'    # development (to compile new CSS and JS)
     HTTPS_ENABLED = True #set to False it may not work when  mainflux is on HTTPS only
-    SSL_SERVER_URL = 'https://35.180.121.29' #'https://localhost'     # 'https://54.171.128.181'
+    SSL_SERVER_URL = 'https://ado.wine-lab.org' #'https://localhost'     # 'https://54.171.128.181'
     SSL_CA_LOCATION = 'flaskapp/ssl/certs/ca.crt' 
-    SERVER_URL = 'http://35.180.121.29' #'http://localhost'     # 'https://54.171.128.181'
+    SERVER_URL = 'http://ado.wine-lab.org' #'http://localhost'     # 'https://54.171.128.181'
 
     # DB Config
     SQLALCHEMY_DATABASE_URI = 'sqlite:///database/db.sqlite'
@@ -48,7 +48,7 @@ class ConfigRPI:
     Set RPI configuration vars.
     """
     # Backend server Mainflux
-    SHORT_SERVER_URL = '35.180.121.29' #'localhost' #for mqtt broker
+    SHORT_SERVER_URL = 'ado.wine-lab.org' #'localhost' #for mqtt broker
     SERVER_PORT_MQTT = 1883 #unencrypted traffic
 
     #TLS over HTTP, for mqtt broker
