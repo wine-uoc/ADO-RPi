@@ -317,7 +317,7 @@ def mqtt_connection_0(tokens, engine, serial):
     subtopic_sr = mqtt_topic + '/control/SR/' + str(tokens.thing_id) #SR command is now specific to this device
     if ConfigRPI.HTTPS_ENABLED:
         print ("Connecting via TLS")
-        flag = client.tls_set(ssl_CA)
+        flag = client.tls_set(ca_certs=None) #operate as a web browser #(ssl_CA)
         client.enable_logger(logger=None)
         result=client.connect(host=ConfigRPI.SHORT_SERVER_URL, port=ConfigRPI.SSL_SERVER_PORT_MQTT, keepalive=60)
         #print(result)

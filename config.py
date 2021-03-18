@@ -20,7 +20,7 @@ class ConfigFlaskApp:
     FLASK_ENV = 'development'    #'production'    # development (to compile new CSS and JS)
     HTTPS_ENABLED = True #set to False it may not work when  mainflux is on HTTPS only
     SSL_SERVER_URL = 'https://ado.wine-lab.org' #'https://localhost'     # 'https://54.171.128.181'
-    SSL_CA_LOCATION = 'flaskapp/ssl/certs/ca.crt' 
+    SSL_CA_LOCATION =  True #True should detect Letsencrypt CA 'flaskapp/ssl/certs/ca.crt' 
     SERVER_URL = 'http://ado.wine-lab.org' #'http://localhost'     # 'https://54.171.128.181'
 
     # DB Config
@@ -53,7 +53,7 @@ class ConfigRPI:
 
     #TLS over HTTP, for mqtt broker
     HTTPS_ENABLED = True
-    SSL_CA_LOCATION = 'flaskapp/ssl/certs/ca.crt' #for rpiapp to enable tls over mqtt
+    SSL_CA_LOCATION = True #'flaskapp/ssl/certs/ca.crt' #for rpiapp to enable tls over mqtt
     SSL_SERVER_PORT_MQTT = 8883 #encrypted traffic
 
     print(' Currently configured to connect to localhost MainFlux !!! ')
