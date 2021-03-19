@@ -177,11 +177,14 @@ def validate_email(email):
 
 def send_email(user):
     token = str(user.get_reset_token())
+    tokens_obj = Tokens.query.filter_by(id=user.email).first()
+    node_name = tokens_obj.node_id
     url = host + '/control/resetpassword/sendmail'
     data = {
             "email": str(user.email),
             "token": str(token),
-            "name": str(user.name)
+            "name": str(user.name),
+            "node_name": str(node_name)
     }
     headers = {"Content-Type": 'application/json'}
     try:
