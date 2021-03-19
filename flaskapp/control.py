@@ -58,11 +58,11 @@ def update_wifi_data(ssid=None, password=None, activate=None):
         output,err = p2.communicate()
     if activate == 1:
         wifi.activate()
-        hostname = open("/etc/hostname", 'r')
-        lines = hostname.readlines()
+        #hostname = open("/etc/hostname", 'r')
+        #lines = hostname.readlines()
         command = "sudo wpa_cli -i wlan0 reconfigure"
         p=subprocess.Popen(command.split())
-        flash('We will reboot your system. You can log in again using'+str(lines[0])+'.local')
+        #flash('We will reboot your system. You can log in again using'+str(lines[0])+'.local')
         command2 = "sudo reboot"
         p=subprocess.Popen(command2.split())
     elif activate == 0:

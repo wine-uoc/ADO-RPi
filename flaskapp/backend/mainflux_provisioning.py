@@ -292,6 +292,7 @@ def register_node_backend(name, email, password, node_id):
 
         # store backend credentials to rpi database
         update_tokens_values(token, thing_id, thing_key,channel_id)
+        raspberrypi_rename(node_name)
 
     if not response_c1.ok and not response_c2.ok:
         # Account exists in ADO, but password does not match.
