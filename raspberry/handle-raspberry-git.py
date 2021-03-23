@@ -34,6 +34,7 @@ try:
                 logging.info("no updates for this repo")
         else:
                 logging.info("proceeding to restart supervisor")
+                time.sleep(90) #wait in case arduino is flashing right now 
                 subprocess.call("/opt/Raspberry/ADO-RPi/raspberry/handle-supervisor")
                 logging.info("END process")
 except Exception as e:
