@@ -31,7 +31,7 @@ try:
         status=g.pull('origin', 'DEMO')
         logging.info("%s", status)
         subprocess.call("/opt/Raspberry/ADO-RPi/arduino/flash-arduino")
-        logging.info("Arduino code was compiled and uploaded")
+        logging.info("Done processing Arduino...")
         logging.info("We are using a shrinked raspberry image, so we should expand the rootfs")
         subprocess.call("/opt/Raspberry/ADO-RPi/arduino/expand-rootfs")
 except Exception as e:
