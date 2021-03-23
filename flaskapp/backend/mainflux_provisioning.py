@@ -80,7 +80,7 @@ def delete_thing(account_token, thing_id):
 # TODO: code repeats in the next three methods
 def return_thing_id(account_token, thing_name):
     global host, ssl_flag
-    url = host + '/things'
+    url = host + '/things?offset=0&limit=100'
     headers = {"Authorization": str(account_token)}
     response = requests.get(url, headers=headers, verify=ssl_flag)
     response = response.json()
@@ -99,7 +99,7 @@ def return_thing_id(account_token, thing_name):
 
 def return_thing_key(account_token, thing_name):
     global host, ssl_flag
-    url = host + '/things'
+    url = host + '/things?offset=0&limit=100'
     headers = {"Authorization": str(account_token)}
     response = requests.get(url, headers=headers, verify=ssl_flag)
     # print (response.text)
@@ -251,7 +251,8 @@ def register_node_backend(name, email, password, node_id):
             _ = create_thing(token, node_name, "device")
             thing_id = return_thing_id(token, node_name)
             thing_key = return_thing_key(token, node_name)
-
+            print (thing_id)
+            print (thing_key)
             # connect to the existing channel
             channel_id = return_channel_id(token, channel_name)
             _ = connect_to_channel(token, channel_id, thing_id)
@@ -277,6 +278,8 @@ def register_node_backend(name, email, password, node_id):
         _ = create_thing(token, node_name, 'device')
         thing_id = return_thing_id(token, node_name)
         thing_key = return_thing_key(token, node_name)
+        print (thing_id)
+        print (thing_key)
 
         # create and connect to new channel
         _ = create_channel(token, channel_name)

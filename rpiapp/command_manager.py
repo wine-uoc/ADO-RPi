@@ -470,6 +470,7 @@ def main():
         tokens, _ = get_table_database(engine, 'tokens')
         if tokens:
             tokens_key = tokens.thing_key
+            print (tokens_key)
             logging.info('Waiting for MQTT credentials.')
         else:
             logging.info('Waiting for node signup.')
