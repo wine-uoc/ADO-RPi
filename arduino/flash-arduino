@@ -12,5 +12,6 @@ fi
 if [ $? -eq 0 ]; then
     echo UPLOAD OK
 else
-    echo UPLOAD FAILED
+    echo UPLOAD FAILED, REMOVING ARDUINO FOLDER
+    sudo rm -r /opt/Arduino/ADO-Arduino
 fi
