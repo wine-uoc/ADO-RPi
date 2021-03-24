@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #we should add git pull to have the latest version of the code
-PS4='+ $BASH_SOURCE:$LINENO:' bash -xlic ''
+#PS4='+ $BASH_SOURCE:$LINENO:' bash -xlic ''
 echo "HELLO!"
 /usr/local/arduino-cli/arduino-cli compile --fqbn arduino:samd:mkrwan1300 /opt/Arduino/ADO-Arduino/src
 if [ $? -eq 0 ]; then
