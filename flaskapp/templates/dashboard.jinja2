@@ -116,7 +116,7 @@
         <a style="margin-top: auto">-</a>
         <a href="{{ url_for('main_bp.dashboard') }}" style="margin-top: auto">Refresh Page</a>
         <a style="margin-top: auto">-</a>
-        <a href="{{ url_for('main_bp.delete') }}" style="margin-top: auto">Factory Reset</a>
+        <a href="{{ url_for('main_bp.delete') }}" onclick="return confirm('Are you sure? This action will erase your credentials on this device and you will only be able to use it again after registering at http://ado.local')" style="margin-top: auto">Factory Reset</a>
         <a style="margin-top: auto">-</a>
         <a href="{{ url_for('main_bp.logout') }}" style="margin-top: auto; margin-bottom: 20px">Log out</a>
 
