@@ -80,7 +80,7 @@ def delete_thing(account_token, thing_id):
 # TODO: code repeats in the next three methods
 def return_thing_id(account_token, thing_name):
     global host, ssl_flag
-    url = host + '/things'
+    url = host + '/things?offset=0&limit=100'
     headers = {"Authorization": str(account_token)}
     response = requests.get(url, headers=headers, verify=ssl_flag)
     response = response.json()
@@ -99,7 +99,7 @@ def return_thing_id(account_token, thing_name):
 
 def return_thing_key(account_token, thing_name):
     global host, ssl_flag
-    url = host + '/things'
+    url = host + '/things?offset=0&limit=100'
     headers = {"Authorization": str(account_token)}
     response = requests.get(url, headers=headers, verify=ssl_flag)
     # print (response.text)
@@ -185,6 +185,22 @@ def get_messages_on_channel(channel_id, thing_key):
     response = requests.get(url, headers=headers, verify=ssl_flag)
     print(response.text)
 
+def raspberrypi_rename(node_name):
+    hosts = open("/etc/hosts", 'r')
+    list_of_lines = hosts.readlines()
+    list_of_lines[5] = "127.0.1.1	"+str(node_name)
+
+    hosts= open("/etc/hosts", 'w')
+    hosts.writelines(list_of_lines)
+    hosts.close()
+
+    hostname = open("/etc/hostname", 'r')
+    list_of_lines = hostname.readlines()
+    list_of_lines[0] = str(node_name)
+
+    hostname= open("/etc/hostname", 'w')
+    hostname.writelines(list_of_lines)
+    hostname.close()
 
 def register_node_backend(name, email, password, node_id):
     global host, ssl_flag
@@ -235,7 +251,8 @@ def register_node_backend(name, email, password, node_id):
             _ = create_thing(token, node_name, "device")
             thing_id = return_thing_id(token, node_name)
             thing_key = return_thing_key(token, node_name)
-
+            print (thing_id)
+            print (thing_key)
             # connect to the existing channel
             channel_id = return_channel_id(token, channel_name)
             _ = connect_to_channel(token, channel_id, thing_id)
@@ -244,7 +261,8 @@ def register_node_backend(name, email, password, node_id):
             update_tokens_values(token, thing_id, thing_key, channel_id)
             # boostrap grafana again, just for development
             grafana_status=grafana.bootstrap(name, organization, email, password, channel_id)
-
+            #modify device name to name.local
+            raspberrypi_rename(node_name)
         else:
             error_msg = 'Device name already exists for this account. Please choose a different name.'
 
@@ -260,6 +278,8 @@ def register_node_backend(name, email, password, node_id):
         _ = create_thing(token, node_name, 'device')
         thing_id = return_thing_id(token, node_name)
         thing_key = return_thing_key(token, node_name)
+        print (thing_id)
+        print (thing_key)
 
         # create and connect to new channel
         _ = create_channel(token, channel_name)
@@ -275,6 +295,7 @@ def register_node_backend(name, email, password, node_id):
 
         # store backend credentials to rpi database
         update_tokens_values(token, thing_id, thing_key,channel_id)
+        raspberrypi_rename(node_name)
 
     if not response_c1.ok and not response_c2.ok:
         # Account exists in ADO, but password does not match.

@@ -57,8 +57,8 @@ def signup():
                                               signup_form.password.data,
                                               node_id)
             if not error_msg:
-                # Registration OK, app log in and proceed
-                return redirect(url_for('main_bp.dashboard'))
+                # Registration OK, app log in and proceed to setting wifi
+                return redirect(url_for('main_bp.set_wifi'))
             logout_user()
             delete_tables_entries()
 
@@ -155,7 +155,7 @@ def pass_reset_code(token):
         #request post to user-control to modify password in database
         url = host + '/control/RenewAccountPassword/'+str(new_token)+"/"+ str(identifier)
         data = {
-            "change": bcrypt.hashpw(new_password, bcrypt.gensalt(10)) #new password for the encoded email
+            "change": bcrypt.hashpw(new_password, bcrypt.gensalt(10)).decode('utf-8') #new password for the encoded email
         }
         headers = {"Content-Type": 'application/json'}
         response = requests.post(url, json=data, headers=headers, verify= ssl_flag) #verify= false disables ssl check

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+echo "HELLO!"
+sudo reboot
+if [ $? -eq 0 ]; then
+    echo RPI REBOOT OK
+else
+    echo RPIAPP REBOOT FAILED
+fi
+
+
+

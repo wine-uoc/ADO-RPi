@@ -5,7 +5,7 @@ app = create_app()
 
 if __name__ == "__main__":
 	if app.config['HTTPS_ENABLED']:
-		app.run(host='0.0.0.0', port=5000,  ssl_context = 'adhoc')    # host='0.0.0.0' to run on machine's IP address
+		app.run(host='0.0.0.0', port=5000,  ssl_context = ('/opt/Raspberry/ADO-RPi/flaskapp/ssl/certs/ADOnodecert.pem', '/opt/Raspberry/ADO-RPi/flaskapp/ssl/certs/ADOnodekey.pem'))    # host='0.0.0.0' to run on machine's IP address
 	else:
 		app.run(host='0.0.0.0', port=5000)
 

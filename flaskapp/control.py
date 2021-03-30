@@ -1,13 +1,13 @@
 """Database control functions."""
 import json
 from flask import current_app as app
-from flask import render_template
+from flask import render_template, flash
 from flask_login import current_user
 import requests
 import certifi
 import urllib3
 from config import ConfigFlaskApp
-
+import subprocess
 from .models import db, User, NodeConfig, Wifi, Tokens, Calibration_1, Calibration_2, Calibration_1_Temp, Calibration_2_Temp, Requires_Cal_1, Requires_Cal_2
 from .utils import create_node_name, delete_entries
 import jwt
@@ -52,8 +52,19 @@ def update_wifi_data(ssid=None, password=None, activate=None):
     if ssid and password:
         wifi.ssid = ssid
         wifi.set_password(password, hash_it=False)
+        p1=subprocess.Popen(["wpa_passphrase", ssid, password], stdout=subprocess.PIPE)
+        p2=subprocess.Popen(["sudo","tee","-a","/etc/wpa_supplicant/wpa_supplicant.conf", ">", "/dev/null"], stdin=p1.stdout, stdout=subprocess.PIPE)
+        p1.stdout.close()  # Give p1 a SIGPIPE if p2 dies.
+        output,err = p2.communicate()
     if activate == 1:
         wifi.activate()
+        #hostname = open("/etc/hostname", 'r')
+        #lines = hostname.readlines()
+        command = "sudo wpa_cli -i wlan0 reconfigure"
+        p=subprocess.Popen(command.split())
+        #flash('We will reboot your system. You can log in again using'+str(lines[0])+'.local')
+        command2 = "sudo reboot"
+        p=subprocess.Popen(command2.split())
     elif activate == 0:
         wifi.deactivate()
     db.session.commit()
@@ -166,11 +177,14 @@ def validate_email(email):
 
 def send_email(user):
     token = str(user.get_reset_token())
+    tokens_obj = Tokens.query.filter_by(id=user.email).first()
+    node_name = tokens_obj.node_id
     url = host + '/control/resetpassword/sendmail'
     data = {
             "email": str(user.email),
             "token": str(token),
-            "name": str(user.name)
+            "name": str(user.name),
+            "node_name": str(node_name)
     }
     headers = {"Content-Type": 'application/json'}
     try:

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+echo "HELLO!"
+pip3 install -r /opt/Raspberry/ADO-RPi/requirements.txt
+if [ $? -eq 0 ]; then
+    echo REQUIREMENTS INSTALL OK
+else
+    echo REQUIREMENTS INSTALL FAILED
+fi
+sudo cp /opt/Raspberry/ADO-RPi/config/ado.conf /etc/supervisor/conf.d/ado.conf
+if [ $? -eq 0 ]; then
+    echo CONFIGURATION COPY OK
+else
+    echo CONFIGURATION COPY FAILED
+fi
+
+sudo service supervisor restart
+if [ $? -eq 0 ]; then
+    echo SUPERVISOR RESTART OK
+else
+    echo SUPERVISOR RESTART FAILED
+fi
+
+

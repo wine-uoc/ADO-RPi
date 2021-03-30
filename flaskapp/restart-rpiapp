@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+echo "HELLO!"
+sudo supervisorctl restart rpiapp
+if [ $? -eq 0 ]; then
+    echo RPIAPP RESTART OK
+else
+    echo RPIAPP RESTART FAILED
+fi
+

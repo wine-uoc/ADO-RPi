@@ -8,9 +8,10 @@ from .control import get_node_id, get_thing_id, get_account_token, get_config_ob
     update_wifi_data, get_user_org, get_tokens_obj, get_calib_1_obj, get_calib_2_obj, get_req_calib_1_obj, get_req_calib_2_obj
 from .forms import WifiForm
 from flaskapp.backend.grafana_bootstrap import load_json
-from flaskapp.backend.mainflux_provisioning import delete_thing
+from flaskapp.backend.mainflux_provisioning import delete_thing, raspberrypi_rename
 from config import ConfigFlaskApp
 import requests
+import subprocess
 if app.config['HTTPS_ENABLED']:
     host = ConfigFlaskApp.SSL_SERVER_URL
     ssl_flag = ConfigFlaskApp.SSL_CA_LOCATION 
@@ -103,7 +104,10 @@ def delete():
     response = delete_thing(token, thingid)
     if response.ok:
       delete_tables_entries()
+      #rename rpi back to ado and reboot
+      raspberrypi_rename("ado")
       logout_user()
+      subprocess.call("/opt/Raspberry/ADO-RPi/flaskapp/reboot")
     else:
       flash("Error when trying to factory reset. Please try again after loging in.")
     return redirect(url_for('main_bp.dashboard'))
