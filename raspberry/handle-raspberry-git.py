@@ -27,8 +27,8 @@ try:
         logging.info("Checking if there is anything to pull for raspberry")
         git_dir = "/opt/Raspberry/ADO-RPi"
         g = git.cmd.Git(git_dir)
-        g.checkout("DEMO")
-        status=g.pull('origin', 'DEMO')
+        g.checkout("DEMO-alpha")
+        status=g.pull('origin', 'DEMO-alpha')
         logging.info("%s", status)
         if "Already up to date" in str(status):
                 logging.info("no updates for this repo")
