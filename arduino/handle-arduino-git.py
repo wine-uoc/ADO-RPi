@@ -27,8 +27,8 @@ try:
         git.Git("/opt/Arduino").clone("https://github.com/wine-uoc/ADO-Arduino.git")
         git_dir = "/opt/Arduino/ADO-Arduino"
         g = git.cmd.Git(git_dir)
-        g.checkout("DEMO-alpha")
-        status=g.pull('origin', 'DEMO-alpha')
+        g.checkout("DEMO")
+        status=g.pull('origin', 'DEMO')
         logging.info("%s", status)
         subprocess.call("/opt/Raspberry/ADO-RPi/arduino/flash-arduino")
         logging.info("Done processing Arduino...")
@@ -42,8 +42,8 @@ except Exception as e:
 
                 git_dir = "/opt/Arduino/ADO-Arduino"
                 g = git.cmd.Git(git_dir)
-                g.checkout("DEMO-alpha")
-                status=g.pull('origin', 'DEMO-alpha')
+                g.checkout("DEMO")
+                status=g.pull('origin', 'DEMO')
                 logging.info("%s", status)
                 if "Already up to date" in str(status):
                         logging.info("nothing to compile/upload")
