@@ -24,33 +24,46 @@ while connection_status == False:
 
 #try to Download repo, making sure that first time ever, arduino is flashed
 try:
-        git.Git("/opt/Arduino").clone("https://github.com/wine-uoc/ADO-Arduino.git")
-        git_dir = "/opt/Arduino/ADO-Arduino"
+        #pull latest version of raspberry first, to make sure we have the right version of this file
+        logging.info("Checking if there is anything to pull for raspberry, for having this process up to date")
+        git_dir = "/opt/Raspberry/ADO-RPi"
         g = git.cmd.Git(git_dir)
         g.checkout("DEMO")
         status=g.pull('origin', 'DEMO')
         logging.info("%s", status)
-        subprocess.call("/opt/Raspberry/ADO-RPi/arduino/flash-arduino")
-        logging.info("Done processing Arduino...")
-        #logging.info("We are using a shrinked raspberry image, so we should expand the rootfs")
-        #subprocess.call("/opt/Raspberry/ADO-RPi/arduino/expand-rootfs")
+        if "Already up to date" in str(status):
+                logging.info("no updates for the raspberry repo")
+                try:
+                        git.Git("/opt/Arduino").clone("https://github.com/wine-uoc/ADO-Arduino.git")
+                        git_dir = "/opt/Arduino/ADO-Arduino"
+                        g = git.cmd.Git(git_dir)
+                        g.checkout("DEMO")
+                        status=g.pull('origin', 'DEMO')
+                        logging.info("%s", status)
+                        subprocess.call("/opt/Raspberry/ADO-RPi/arduino/flash-arduino")
+                        logging.info("Done processing Arduino...")
+                except Exception as e:
+                        logging.info("%s",str(e))
+                        if "already exists" in str(e):
+                                logging.info("We have already downloaded this git repo")
+                                logging.info("Checking if there is anything to pull")
+
+                                git_dir = "/opt/Arduino/ADO-Arduino"
+                                g = git.cmd.Git(git_dir)
+                                g.checkout("DEMO")
+                                status=g.pull('origin', 'DEMO')
+                                logging.info("%s", status)
+                                if "Already up to date" in str(status):
+                                        logging.info("nothing to compile/upload")
+                                else:
+                                        logging.info("proceeding to updating Arduino firmware")
+                                        subprocess.call("/opt/Raspberry/ADO-RPi/arduino/flash-arduino")
+                                        logging.info("END compile/upload")
+
+        else: #raspberry files are not up to date
+                logging.info("proceeding to restart supervisor, and this process will be reloaded with updated files")
+                subprocess.call("/opt/Raspberry/ADO-RPi/raspberry/handle-supervisor")
+                logging.info("END process")
+
 except Exception as e:
         logging.info("%s",str(e))
-        if "already exists" in str(e):
-                logging.info("We have already downloaded this git repo")
-                logging.info("Checking if there is anything to pull")
-
-                git_dir = "/opt/Arduino/ADO-Arduino"
-                g = git.cmd.Git(git_dir)
-                g.checkout("DEMO")
-                status=g.pull('origin', 'DEMO')
-                logging.info("%s", status)
-                if "Already up to date" in str(status):
-                        logging.info("nothing to compile/upload")
-                else:
-                        logging.info("proceeding to updating Arduino firmware")
-                        subprocess.call("/opt/Raspberry/ADO-RPi/arduino/flash-arduino")
-                        logging.info("END compile/upload")
-
-
-
