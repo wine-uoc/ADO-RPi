@@ -56,15 +56,15 @@ def update_wifi_data(ssid=None, password=None, activate=None):
         p2=subprocess.Popen(["sudo","tee","-a","/etc/wpa_supplicant/wpa_supplicant.conf", ">", "/dev/null"], stdin=p1.stdout, stdout=subprocess.PIPE)
         p1.stdout.close()  # Give p1 a SIGPIPE if p2 dies.
         output,err = p2.communicate()
+        command = "sudo wpa_cli -i wlan0 reconfigure"
+        p=subprocess.Popen(command.split())
     if activate == 1:
         wifi.activate()
         #hostname = open("/etc/hostname", 'r')
         #lines = hostname.readlines()
         command = "sudo wpa_cli -i wlan0 reconfigure"
         p=subprocess.Popen(command.split())
-        #flash('We will reboot your system. You can log in again using'+str(lines[0])+'.local')
-        command2 = "sudo reboot"
-        p=subprocess.Popen(command2.split())
+        subprocess.call("/opt/Raspberry/ADO-RPi/flaskapp/expand-rootfs")
     elif activate == 0:
         wifi.deactivate()
     db.session.commit()
