@@ -92,9 +92,21 @@ def publish_data(magnitude,response, client, topic, engine):
         #for some sensors, special payload construction is needed, to use the calibration values
         #********************************************
         if name == "Temperature-S": #update global temp value, take into account the surface temp
-            temperature = value
-            #logging.debug ("temperature is %s", value)
-            print(temperature)
+            if (value > -5) & (value < 80):
+                temperature = value
+                #logging.debug ("temperature is %s", value)
+                print(temperature)
+            else:
+                # filter spikes in grafana
+                value = 'error' #this value should not be valid for being stored to influx
+        elif name == "Temperature-D": #update global temp value, take into account the surface temp
+            if (value > -5) & (value < 80):
+                #do nothing, it is fine
+                #logging.debug ("temperature is %s", value)
+                print(temperature)
+            else:
+                # filter spikes in grafana
+                value = 'error' #this value should not be valid for being stored to influx
         #********************************************
         if name == "pH":
             neutralVoltage = getattr(db1_row, idx_sensor_str) 
