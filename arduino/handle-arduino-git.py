@@ -67,3 +67,6 @@ try:
 
 except Exception as e:
         logging.info("%s",str(e))
+        if "fatal: Unable to create '/opt/Raspberry/ADO-RPi/.git/index.lock':" in str(e):
+                command = "supervisorctl restart arduino-update"
+                p=subprocess.Popen(command.split())
